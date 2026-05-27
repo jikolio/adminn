@@ -109,9 +109,7 @@
         <div style="overflow-x:auto;">
             <table style="width:100%">
                 <thead>
-                    <tr>
-                        <th>الفيلا</th><th>رابط الموقع</th><th>اسم الموقع</th><th>السعر</th><th>غرف</th><th>حمامات</th><th>ضيوف</th><th>الحالة</th><th>حجز/إلغاء</th><th>إظهار</th><th>حذف</th>
-                    </tr>
+                    <tr><th>الفيلا</th><th>رابط الموقع</th><th>اسم الموقع</th><th>السعر</th><th>غرف</th><th>حمامات</th><th>ضيوف</th><th>الحالة</th><th>حجز/إلغاء</th><th>إظهار</th><th>حذف</th></tr>
                 </thead>
                 <tbody id="villasList"></tbody>
             </table>
@@ -441,52 +439,45 @@ function renderVillasList() {
     }).join('');
     
     document.querySelectorAll('.delete-villa').forEach(btn => {
-        btn.removeEventListener('click', deleteVillaHandler);
-        btn.addEventListener('click', deleteVillaHandler);
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            if (confirm('هل أنت متأكد من حذف هذه الفيلا؟')) {
+                properties = properties.filter(p => p.id !== id);
+                await saveProperties();
+                renderVillasList();
+                renderSpeedsList();
+                updateStats();
+                updateVillaImagesInfo();
+                showToast('✅ تم حذف الفيلا');
+            }
+        };
     });
     
     document.querySelectorAll('.btn-book').forEach(btn => {
-        btn.removeEventListener('click', bookVillaHandler);
-        btn.addEventListener('click', bookVillaHandler);
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            if (bookings.some(b => b.villaId === id)) { showToast('❌ الفيلا محجوزة'); return; }
+            const villa = properties.find(p => p.id === id);
+            bookings.push({ id: Date.now(), villaId: id, villaNumber: villa.number, date: new Date().toLocaleDateString('ar-IQ'), time: new Date().toLocaleTimeString('ar-IQ') });
+            await saveBookings();
+            renderVillasList();
+            renderBookingsList();
+            updateStats();
+            showToast(`✅ تم حجز ${villa.number}`);
+        };
     });
     
     document.querySelectorAll('.btn-cancel').forEach(btn => {
-        btn.removeEventListener('click', cancelBookingHandler);
-        btn.addEventListener('click', cancelBookingHandler);
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            bookings = bookings.filter(b => b.id !== id);
+            await saveBookings();
+            renderVillasList();
+            renderBookingsList();
+            updateStats();
+            showToast('✅ تم إلغاء الحجز');
+        };
     });
-}
-
-async function deleteVillaHandler(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    if (confirm('هل أنت متأكد من حذف هذه الفيلا؟')) {
-        properties = properties.filter(p => p.id !== id);
-        await saveProperties();
-        renderVillasList();
-        updateStats();
-        showToast('✅ تم حذف الفيلا');
-    }
-}
-
-async function bookVillaHandler(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    if (bookings.some(b => b.villaId === id)) { showToast('❌ الفيلا محجوزة'); return; }
-    const villa = properties.find(p => p.id === id);
-    bookings.push({ id: Date.now(), villaId: id, villaNumber: villa.number, date: new Date().toLocaleDateString('ar-IQ'), time: new Date().toLocaleTimeString('ar-IQ') });
-    await saveBookings();
-    renderVillasList();
-    renderBookingsList();
-    updateStats();
-    showToast(`✅ تم حجز ${villa.number}`);
-}
-
-async function cancelBookingHandler(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    bookings = bookings.filter(b => b.id !== id);
-    await saveBookings();
-    renderVillasList();
-    renderBookingsList();
-    updateStats();
-    showToast('✅ تم إلغاء الحجز');
 }
 
 function renderBookingsList() {
@@ -501,19 +492,16 @@ function renderBookingsList() {
     `).join('');
     
     document.querySelectorAll('.cancel-booking').forEach(btn => {
-        btn.removeEventListener('click', cancelBookingFromListHandler);
-        btn.addEventListener('click', cancelBookingFromListHandler);
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            bookings = bookings.filter(b => b.id !== id);
+            await saveBookings();
+            renderVillasList();
+            renderBookingsList();
+            updateStats();
+            showToast('✅ تم إلغاء الحجز');
+        };
     });
-}
-
-async function cancelBookingFromListHandler(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    bookings = bookings.filter(b => b.id !== id);
-    await saveBookings();
-    renderVillasList();
-    renderBookingsList();
-    updateStats();
-    showToast('✅ تم إلغاء الحجز');
 }
 
 function renderPhonesList() {
@@ -527,28 +515,22 @@ function renderPhonesList() {
     `).join('');
     
     document.querySelectorAll('.phone-input').forEach(inp => {
-        inp.removeEventListener('change', phoneChangeHandler);
-        inp.addEventListener('change', phoneChangeHandler);
+        inp.onchange = () => {
+            const idx = parseInt(inp.dataset.index);
+            phoneNumbers[idx] = inp.value;
+        };
     });
     
     document.querySelectorAll('.delete-phone').forEach(btn => {
-        btn.removeEventListener('click', deletePhoneHandler);
-        btn.addEventListener('click', deletePhoneHandler);
+        btn.onclick = () => {
+            const idx = parseInt(btn.dataset.index);
+            if (phoneNumbers.length <= 1) { showToast('لا يمكن حذف آخر رقم'); return; }
+            phoneNumbers.splice(idx, 1);
+            renderPhonesList();
+        };
     });
     
     document.getElementById('whatsappNumber').value = whatsappMain;
-}
-
-function phoneChangeHandler(e) {
-    const idx = parseInt(e.currentTarget.dataset.index);
-    phoneNumbers[idx] = e.currentTarget.value;
-}
-
-function deletePhoneHandler(e) {
-    const idx = parseInt(e.currentTarget.dataset.index);
-    if (phoneNumbers.length <= 1) { showToast('لا يمكن حذف آخر رقم'); return; }
-    phoneNumbers.splice(idx, 1);
-    renderPhonesList();
 }
 
 function renderHeroImagesList() {
@@ -564,18 +546,15 @@ function renderHeroImagesList() {
     `).join('');
     
     document.querySelectorAll('.delete-hero').forEach(btn => {
-        btn.removeEventListener('click', deleteHeroHandler);
-        btn.addEventListener('click', deleteHeroHandler);
+        btn.onclick = async () => {
+            const idx = parseInt(btn.dataset.index);
+            if (heroImages.length <= 1) { showToast('لا يمكن حذف آخر صورة'); return; }
+            heroImages.splice(idx, 1);
+            await saveHeroImages();
+            renderHeroImagesList();
+            showToast('✅ تم حذف الصورة');
+        };
     });
-}
-
-async function deleteHeroHandler(e) {
-    const idx = parseInt(e.currentTarget.dataset.index);
-    if (heroImages.length <= 1) { showToast('لا يمكن حذف آخر صورة'); return; }
-    heroImages.splice(idx, 1);
-    await saveHeroImages();
-    renderHeroImagesList();
-    showToast('✅ تم حذف الصورة');
 }
 
 function renderSpeedsList() {
@@ -652,7 +631,9 @@ document.getElementById('saveVillasBtn').onclick = async () => {
     });
     await saveProperties();
     renderVillasList();
+    renderSpeedsList();
     updateStats();
+    updateVillaImagesInfo();
     showToast('✅ تم حفظ التغييرات');
 };
 
