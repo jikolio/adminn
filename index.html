@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - فلل الفخامة</title>
+    <title>لوحة التحكم الكاملة - فلل الفخامة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -39,6 +39,7 @@
         .btn-book { background: #3b82f6; color: white; }
         .btn-cancel { background: #ef4444; color: white; }
         .btn-reset { background: #6b7280; color: white; }
+        .btn-apply { background: #8b5cf6; color: white; }
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 13px; }
@@ -52,13 +53,13 @@
         .image-preview .remove-img { position: absolute; top: -8px; right: -8px; background: red; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; }
         .image-upload-btn { background: rgba(212,175,55,0.2); border: 2px dashed #D4AF37; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; margin-top: 10px; }
         
-        .hero-image-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; flex-wrap: wrap; }
+        .hero-image-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; }
         .hero-image-preview { width: 50px; height: 40px; object-fit: cover; border-radius: 5px; }
         .hero-upload-area { background: rgba(212,175,55,0.1); border: 2px dashed #D4AF37; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; margin-bottom: 15px; }
         
         .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .speed-control-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; }
-        .phone-item { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+        .phone-item { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
         .phone-item input { flex: 1; padding: 8px; border-radius: 5px; background: rgba(255,255,255,0.1); border: 1px solid #D4AF37; color: white; }
         .booking-item { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         
@@ -67,6 +68,7 @@
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 26px; }
         .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         .toggle-switch input:checked + .toggle-slider { background-color: #D4AF37; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
         
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #D4AF37; color: black; padding: 10px 20px; border-radius: 25px; display: none; z-index: 9999; font-weight: bold; }
         .toast.show { display: block; }
@@ -81,7 +83,7 @@
 </head>
 <body>
 <div class="container">
-    <h1><i class="fas fa-crown"></i> لوحة تحكم فلل الفخامة</h1>
+    <h1><i class="fas fa-crown"></i> لوحة تحكم فلل الفخامة (الكاملة)</h1>
     
     <div class="stats">
         <div class="stat-card"><div class="num" id="totalVillas">0</div><div class="label">إجمالي الفلل</div></div>
@@ -103,7 +105,7 @@
         <button class="tab-btn" data-tab="bookings">📋 10. الحجوزات</button>
     </div>
     
-    <!-- 1. إدارة الفلل -->
+    <!-- ==================== 1. إدارة الفلل ==================== -->
     <div id="villasTab" class="tab-content active">
         <div style="overflow-x:auto;">
             <table style="width:100%">
@@ -116,7 +118,7 @@
         <button class="btn-save" id="saveVillasBtn"><i class="fas fa-save"></i> حفظ التغييرات</button>
     </div>
     
-    <!-- 2. إضافة فيلا -->
+    <!-- ==================== 2. إضافة فيلا ==================== -->
     <div id="addTab" class="tab-content">
         <div class="form-row">
             <div class="form-group"><label>اسم الفيلا *</label><input type="text" id="newNumber" placeholder="مثال: فيلا 7"></div>
@@ -136,7 +138,7 @@
         <button class="btn-cancel" id="clearAddFormBtn"><i class="fas fa-eraser"></i> مسح الحقول</button>
     </div>
     
-    <!-- 3. تخصيص المظهر -->
+    <!-- ==================== 3. تخصيص المظهر ==================== -->
     <div id="appearanceTab" class="tab-content">
         <div class="settings-grid">
             <div class="form-group"><label>اللون الذهبي</label><input type="color" id="primaryColor" value="#D4AF37"></div>
@@ -154,6 +156,7 @@
                 <option value="priceDesc">السعر: من الأعلى للأقل</option>
                 <option value="roomsAsc">الغرف: من الأقل للأعلى</option>
                 <option value="roomsDesc">الغرف: من الأعلى للأقل</option>
+                <option value="random">🎲 عشوائي</option>
             </select>
         </div>
         <div class="settings-grid">
@@ -164,7 +167,7 @@
         <button class="btn-reset" id="resetAppearanceBtn"><i class="fas fa-undo-alt"></i> استرجاع الافتراضي</button>
     </div>
     
-    <!-- 4. الخلفيات -->
+    <!-- ==================== 4. الخلفيات ==================== -->
     <div id="imagesTab" class="tab-content">
         <div class="hero-upload-area" onclick="document.getElementById('heroImageUpload').click()"><i class="fas fa-cloud-upload-alt"></i> 📸 إضافة صور خلفية</div>
         <input type="file" id="heroImageUpload" multiple accept="image/*" style="display:none" onchange="handleHeroImageUpload(event)">
@@ -181,7 +184,7 @@
         <button class="btn-reset" id="resetHeroImagesBtn"><i class="fas fa-undo-alt"></i> استرجاع الصور الافتراضية</button>
     </div>
     
-    <!-- 5. سرعة الصور -->
+    <!-- ==================== 5. سرعة الصور ==================== -->
     <div id="villaImagesTab" class="tab-content">
         <div id="speedsList"></div>
         <div class="settings-grid">
@@ -211,7 +214,7 @@
         <button class="btn-reset" id="resetSpeedSettingsBtn"><i class="fas fa-undo-alt"></i> استرجاع الإعدادات</button>
     </div>
     
-    <!-- 6. النصوص -->
+    <!-- ==================== 6. النصوص ==================== -->
     <div id="textsTab" class="tab-content">
         <div class="form-group"><label>عنوان الموقع</label><input type="text" id="siteTitle" value="فلل الفخامة"></div>
         <div class="form-group"><label>وصف الموقع</label><input type="text" id="siteDesc" value="استمتع بتجربة إقامة فاخرة مع إطلالات خلابة"></div>
@@ -227,7 +230,7 @@
         <button class="btn-reset" id="resetTextsBtn"><i class="fas fa-undo-alt"></i> استرجاع النصوص</button>
     </div>
     
-    <!-- 7. أرقام الهاتف -->
+    <!-- ==================== 7. أرقام الهاتف ==================== -->
     <div id="phonesTab" class="tab-content">
         <div id="phonesList"></div>
         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -239,7 +242,7 @@
         <button class="btn-reset" id="resetPhonesBtn"><i class="fas fa-undo-alt"></i> استرجاع الأرقام</button>
     </div>
     
-    <!-- 8. وسائل التواصل -->
+    <!-- ==================== 8. وسائل التواصل ==================== -->
     <div id="socialTab" class="tab-content">
         <div class="form-group"><label><i class="fab fa-instagram"></i> رابط إنستقرام</label><input type="text" id="instagramUrl" value="https://www.instagram.com/"></div>
         <div class="form-group"><label><i class="fab fa-facebook"></i> رابط فيسبوك</label><input type="text" id="facebookUrl" value="https://www.facebook.com/"></div>
@@ -248,7 +251,7 @@
         <button class="btn-reset" id="resetSocialBtn"><i class="fas fa-undo-alt"></i> استرجاع الروابط</button>
     </div>
     
-    <!-- 9. الإعدادات -->
+    <!-- ==================== 9. الإعدادات ==================== -->
     <div id="settingsTab" class="tab-content">
         <div class="settings-grid">
             <div class="form-group"><label>سرعة عرض الخلفيات (ثانية)</label><input type="number" id="generalHeroSpeed" min="2" max="15" value="6"></div>
@@ -263,7 +266,7 @@
         <button class="btn-reset" id="resetGeneralSettingsBtn"><i class="fas fa-undo-alt"></i> استرجاع الإعدادات</button>
     </div>
     
-    <!-- 10. الحجوزات -->
+    <!-- ==================== 10. الحجوزات ==================== -->
     <div id="bookingsTab" class="tab-content">
         <div id="bookingsList"></div>
         <button class="btn-danger" id="clearBookingsBtn"><i class="fas fa-trash-alt"></i> حذف جميع الحجوزات</button>
@@ -293,6 +296,8 @@ let phoneNumbers = ["0750 312 4874"];
 let whatsappMain = "9647503124874";
 let instagramUrl = "https://www.instagram.com/";
 let facebookUrl = "https://www.facebook.com/";
+let imageIntervals = {};
+let isVillaSlideshowRunning = true;
 let globalSpeedMode = "individual";
 
 // Default Data
@@ -320,16 +325,13 @@ const defaultProperties = [
 if (typeof firebase !== 'undefined') {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
-    console.log("✅ Firebase ready");
+    console.log("Firebase ready");
 }
 
 // ==================== Save Functions ====================
 async function saveProperties() {
     if (!db) return;
-    for (const p of properties) {
-        await db.collection('properties').doc(p.id.toString()).set(p);
-    }
-    console.log("✅ Properties saved");
+    for (const p of properties) await db.collection('properties').doc(p.id.toString()).set(p);
 }
 
 async function saveBookings() {
@@ -401,80 +403,6 @@ async function loadData() {
     } catch(e) { console.error(e); }
 }
 
-// ==================== Delete Villa Function ====================
-async function deleteVillaById(id) {
-    if (confirm('هل أنت متأكد من حذف هذه الفيلا؟')) {
-        properties = properties.filter(p => p.id !== id);
-        await saveProperties();
-        renderVillasList();
-        renderSpeedsList();
-        updateStats();
-        updateVillaImagesInfo();
-        showToast('✅ تم حذف الفيلا بنجاح');
-    }
-}
-
-// ==================== Book Villa Function ====================
-async function bookVillaById(id) {
-    if (bookings.some(b => b.villaId === id)) { 
-        showToast('❌ الفيلا محجوزة بالفعل'); 
-        return; 
-    }
-    const villa = properties.find(p => p.id === id);
-    bookings.push({ 
-        id: Date.now(), 
-        villaId: id, 
-        villaNumber: villa.number, 
-        date: new Date().toLocaleDateString('ar-IQ'), 
-        time: new Date().toLocaleTimeString('ar-IQ') 
-    });
-    await saveBookings();
-    renderVillasList();
-    renderBookingsList();
-    updateStats();
-    showToast(`✅ تم حجز ${villa.number}`);
-}
-
-// ==================== Cancel Booking Function ====================
-async function cancelBookingById(id) {
-    bookings = bookings.filter(b => b.id !== id);
-    await saveBookings();
-    renderVillasList();
-    renderBookingsList();
-    updateStats();
-    showToast('✅ تم إلغاء الحجز');
-}
-
-// ==================== Attach Events After Render ====================
-function attachVillaEvents() {
-    // Delete buttons
-    document.querySelectorAll('.delete-villa').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            deleteVillaById(id);
-        };
-    });
-    
-    // Book buttons
-    document.querySelectorAll('.btn-book').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            bookVillaById(id);
-        };
-    });
-    
-    // Cancel buttons
-    document.querySelectorAll('.btn-cancel').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            cancelBookingById(id);
-        };
-    });
-}
-
 // ==================== Render Functions ====================
 function renderAll() {
     renderVillasList();
@@ -485,6 +413,7 @@ function renderAll() {
     updateStats();
     updateVillaImagesInfo();
     loadSettingsToInputs();
+    loadTextsToInputs();
 }
 
 function renderVillasList() {
@@ -504,15 +433,12 @@ function renderVillasList() {
                 <td><input type="number" class="baths-input" value="${villa.bathrooms}" style="width:60px;"></td>
                 <td><input type="number" class="guests-input" value="${villa.guests}" style="width:60px;"></td>
                 <td style="color:${isBooked ? '#ef4444' : '#22c55e'};">${isBooked ? 'محجوزة' : 'متاحة'}</td>
-                <td>${isBooked ? `<button class="btn-cancel" data-id="${booking.id}">إلغاء</button>` : `<button class="btn-book" data-id="${villa.id}">حجز</button>`}</td>
+                <td>${isBooked ? '<button class="btn-cancel cancel-booking-row" data-booking-id="' + booking.id + '">إلغاء</button>' : '<button class="btn-book book-villa-row" data-villa-id="' + villa.id + '">حجز</button>'}</td>
                 <td><label class="toggle-switch"><input type="checkbox" class="visible-check" ${villa.visible !== false ? 'checked' : ''}><span class="toggle-slider"></span></label></td>
-                <td><button class="btn-danger delete-villa" data-id="${villa.id}">🗑️ حذف</button></td>
+                <td><button class="btn-danger delete-villa" data-id="${villa.id}">حذف</button></td>
             </tr>
         `;
     }).join('');
-    
-    // ربط الأحداث بعد رسم الجدول مباشرة
-    attachVillaEvents();
 }
 
 function renderBookingsList() {
@@ -525,19 +451,6 @@ function renderBookingsList() {
             <button class="btn-danger cancel-booking" data-id="${b.id}">إلغاء</button>
         </div>
     `).join('');
-    
-    document.querySelectorAll('.cancel-booking').forEach(btn => {
-        btn.onclick = async (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            bookings = bookings.filter(b => b.id !== id);
-            await saveBookings();
-            renderVillasList();
-            renderBookingsList();
-            updateStats();
-            showToast('✅ تم إلغاء الحجز');
-        };
-    });
 }
 
 function renderPhonesList() {
@@ -552,14 +465,14 @@ function renderPhonesList() {
     
     document.querySelectorAll('.phone-input').forEach(inp => {
         inp.onchange = () => {
-            const idx = parseInt(inp.getAttribute('data-index'));
+            const idx = parseInt(inp.dataset.index);
             phoneNumbers[idx] = inp.value;
         };
     });
     
     document.querySelectorAll('.delete-phone').forEach(btn => {
         btn.onclick = () => {
-            const idx = parseInt(btn.getAttribute('data-index'));
+            const idx = parseInt(btn.dataset.index);
             if (phoneNumbers.length <= 1) { showToast('لا يمكن حذف آخر رقم'); return; }
             phoneNumbers.splice(idx, 1);
             renderPhonesList();
@@ -580,17 +493,6 @@ function renderHeroImagesList() {
             <button class="btn-danger delete-hero" data-index="${i}">حذف</button>
         </div>
     `).join('');
-    
-    document.querySelectorAll('.delete-hero').forEach(btn => {
-        btn.onclick = async () => {
-            const idx = parseInt(btn.getAttribute('data-index'));
-            if (heroImages.length <= 1) { showToast('لا يمكن حذف آخر صورة'); return; }
-            heroImages.splice(idx, 1);
-            await saveHeroImages();
-            renderHeroImagesList();
-            showToast('✅ تم حذف الصورة');
-        };
-    });
 }
 
 function renderSpeedsList() {
@@ -618,7 +520,7 @@ function updateVillaImagesInfo() {
     const container = document.getElementById('villaImagesInfo');
     if (!container) return;
     let totalImages = properties.reduce((sum, v) => sum + (v.images?.length || 0), 0);
-    container.innerHTML = `<div><strong>عدد الفلل:</strong> ${properties.length}</div><div><strong>إجمالي الصور:</strong> ${totalImages}</div><div><strong>الوضع الحالي:</strong> ${globalSpeedMode === 'individual' ? 'كل فيلا بسرعة مستقلة' : (globalSpeedMode === 'uniform' ? 'سرعة موحدة' : 'تناوب فردي/زوجي')}</div>`;
+    container.innerHTML = '<div><strong>عدد الفلل:</strong> ' + properties.length + '</div><div><strong>إجمالي الصور:</strong> ' + totalImages + '</div><div><strong>الوضع الحالي:</strong> ' + (globalSpeedMode === 'individual' ? 'كل فيلا بسرعة مستقلة' : (globalSpeedMode === 'uniform' ? 'سرعة موحدة' : 'تناوب فردي/زوجي')) + '</div>';
 }
 
 function loadSettingsToInputs() {
@@ -644,11 +546,82 @@ function loadSettingsToInputs() {
     changeGlobalSpeedMode();
 }
 
+function loadTextsToInputs() {
+    // Values already set in HTML
+}
+
+// ==================== Event Delegation for Dynamic Elements ====================
+document.addEventListener('click', async function(e) {
+    // Delete villa button
+    if (e.target.classList.contains('delete-villa')) {
+        const id = parseInt(e.target.dataset.id);
+        if (confirm('هل أنت متأكد من حذف هذه الفيلا؟')) {
+            properties = properties.filter(p => p.id !== id);
+            await saveProperties();
+            renderVillasList();
+            renderSpeedsList();
+            updateStats();
+            updateVillaImagesInfo();
+            showToast('تم حذف الفيلا');
+        }
+        return;
+    }
+    
+    // Book villa button (from villas table)
+    if (e.target.classList.contains('book-villa-row')) {
+        const id = parseInt(e.target.dataset.villaId);
+        if (bookings.some(b => b.villaId === id)) { showToast('الفيلا محجوزة'); return; }
+        const villa = properties.find(p => p.id === id);
+        bookings.push({ id: Date.now(), villaId: id, villaNumber: villa.number, date: new Date().toLocaleDateString('ar-IQ'), time: new Date().toLocaleTimeString('ar-IQ') });
+        await saveBookings();
+        renderVillasList();
+        renderBookingsList();
+        updateStats();
+        showToast('تم حجز ' + villa.number);
+        return;
+    }
+    
+    // Cancel booking button (from villas table)
+    if (e.target.classList.contains('cancel-booking-row')) {
+        const id = parseInt(e.target.dataset.bookingId);
+        bookings = bookings.filter(b => b.id !== id);
+        await saveBookings();
+        renderVillasList();
+        renderBookingsList();
+        updateStats();
+        showToast('تم إلغاء الحجز');
+        return;
+    }
+    
+    // Cancel booking button (from bookings list)
+    if (e.target.classList.contains('cancel-booking')) {
+        const id = parseInt(e.target.dataset.id);
+        bookings = bookings.filter(b => b.id !== id);
+        await saveBookings();
+        renderVillasList();
+        renderBookingsList();
+        updateStats();
+        showToast('تم إلغاء الحجز');
+        return;
+    }
+    
+    // Delete hero image
+    if (e.target.classList.contains('delete-hero')) {
+        const idx = parseInt(e.target.dataset.index);
+        if (heroImages.length <= 1) { showToast('لا يمكن حذف آخر صورة'); return; }
+        heroImages.splice(idx, 1);
+        await saveHeroImages();
+        renderHeroImagesList();
+        showToast('تم حذف الصورة');
+        return;
+    }
+});
+
 // ==================== Villas Save ====================
 document.getElementById('saveVillasBtn').onclick = async () => {
     const rows = document.querySelectorAll('#villasList tr');
     rows.forEach(row => {
-        const id = parseInt(row.getAttribute('data-id'));
+        const id = parseInt(row.dataset.id);
         const villa = properties.find(p => p.id === id);
         if (villa) {
             villa.location = row.querySelector('.location-input')?.value || villa.location;
@@ -666,7 +639,7 @@ document.getElementById('saveVillasBtn').onclick = async () => {
     renderSpeedsList();
     updateStats();
     updateVillaImagesInfo();
-    showToast('✅ تم حفظ التغييرات');
+    showToast('تم حفظ التغييرات');
 };
 
 // ==================== Add Villa ====================
@@ -680,7 +653,7 @@ function handleImageUpload(event) {
                 tempImages.push(e.target.result);
                 const div = document.createElement('div');
                 div.className = 'image-preview';
-                div.innerHTML = `<img src="${e.target.result}"><span class="remove-img" onclick="this.parentElement.remove(); tempImages=tempImages.filter(img=>img!=='${e.target.result}')">&times;</span>`;
+                div.innerHTML = '<img src="' + e.target.result + '"><span class="remove-img" onclick="removeTempImage(this, \'' + e.target.result + '\')">&times;</span>';
                 preview.appendChild(div);
             };
             reader.readAsDataURL(file);
@@ -688,7 +661,13 @@ function handleImageUpload(event) {
     }
 }
 
-document.getElementById('clearAddFormBtn').onclick = () => {
+function removeTempImage(el, imgData) {
+    el.parentElement.remove();
+    tempImages = tempImages.filter(img => img !== imgData);
+}
+
+// FIX: Clear form button - direct function instead of simulating click
+document.getElementById('clearAddFormBtn').onclick = function() {
     document.getElementById('newNumber').value = '';
     document.getElementById('newLocationName').value = '';
     document.getElementById('newLocation').value = '';
@@ -698,12 +677,12 @@ document.getElementById('clearAddFormBtn').onclick = () => {
     document.getElementById('newGuests').value = '6';
     document.getElementById('imagePreview').innerHTML = '';
     tempImages = [];
-    showToast('🧹 تم مسح جميع الحقول');
+    showToast('تم مسح الحقول');
 };
 
 document.getElementById('addVillaBtn').onclick = async () => {
     const number = document.getElementById('newNumber').value.trim();
-    if (!number) { showToast('❌ أدخل اسم الفيلا'); return; }
+    if (!number) { showToast('أدخل اسم الفيلا'); return; }
     
     const newId = properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 7;
     const newVilla = {
@@ -727,16 +706,8 @@ document.getElementById('addVillaBtn').onclick = async () => {
     renderSpeedsList();
     updateStats();
     updateVillaImagesInfo();
-    
-    // Clear form
-    document.getElementById('newNumber').value = '';
-    document.getElementById('newLocationName').value = '';
-    document.getElementById('newLocation').value = '';
-    document.getElementById('newPrice').value = '';
-    document.getElementById('imagePreview').innerHTML = '';
-    tempImages = [];
-    
-    showToast(`✅ تم إضافة ${number} بنجاح`);
+    document.getElementById('clearAddFormBtn').click();
+    showToast('تم إضافة ' + number);
 };
 
 // ==================== Hero Images ====================
@@ -749,7 +720,7 @@ function handleHeroImageUpload(event) {
                 heroImages.push(e.target.result);
                 await saveHeroImages();
                 renderHeroImagesList();
-                showToast('✅ تم إضافة صورة');
+                showToast('تم إضافة صورة');
             };
             reader.readAsDataURL(file);
         }
@@ -758,23 +729,23 @@ function handleHeroImageUpload(event) {
 
 document.getElementById('addHeroImageBtn').onclick = async () => {
     const url = document.getElementById('heroImageUrl').value.trim();
-    if (!url) { showToast('❌ أدخل رابط الصورة'); return; }
+    if (!url) { showToast('أدخل رابط الصورة'); return; }
     heroImages.push(url);
     await saveHeroImages();
     renderHeroImagesList();
     document.getElementById('heroImageUrl').value = '';
-    showToast('✅ تم إضافة الصورة');
+    showToast('تم إضافة الصورة');
 };
 
 document.getElementById('resetHeroImagesBtn').onclick = async () => {
     heroImages = [...defaultHeroImages];
     await saveHeroImages();
     renderHeroImagesList();
-    showToast('✅ تم استرجاع الصور الافتراضية');
+    showToast('تم استرجاع الصور الافتراضية');
 };
 
 document.getElementById('restartSlideshowBtn').onclick = () => {
-    showToast('▶️ تم إعادة تشغيل السلايدر');
+    showToast('تم إعادة تشغيل السلايدر');
 };
 
 // ==================== Speed Settings ====================
@@ -790,30 +761,48 @@ document.getElementById('applySpeedBtn').onclick = () => {
     if (globalSpeedMode === 'uniform') {
         const speed = parseFloat(document.getElementById('uniformSpeed').value);
         properties.forEach(v => v.slideshowSpeed = speed);
-        showToast(`✅ تم تطبيق سرعة موحدة (${speed} ثانية)`);
+        showToast('تم تطبيق سرعة موحدة (' + speed + ' ثانية)');
     } else if (globalSpeedMode === 'alternating') {
         properties.forEach((v, idx) => { v.slideshowSpeed = idx % 2 === 0 ? 4 : 5.5; });
-        showToast(`✅ تم تطبيق سرعة متناوبة (فردي: 4 ث، زوجي: 5.5 ث)`);
+        showToast('تم تطبيق سرعة متناوبة (فردي: 4 ث، زوجي: 5.5 ث)');
     } else {
         properties.forEach(v => {
-            const input = document.getElementById(`speed_${v.id}`);
+            const input = document.getElementById('speed_' + v.id);
             if (input) v.slideshowSpeed = parseFloat(input.value);
         });
-        showToast(`✅ تم تطبيق السرعات المحددة`);
+        showToast('تم تطبيق السرعات المحددة');
     }
     renderSpeedsList();
 };
 
 document.getElementById('restartIntervalBtn').onclick = () => {
-    showToast("▶️ تم إعادة تشغيل تبديل صور الفلل");
+    isVillaSlideshowRunning = true;
+    showToast('تم إعادة تشغيل تبديل صور الفلل');
 };
 
 document.getElementById('stopIntervalBtn').onclick = () => {
-    showToast("⏸️ تم إيقاف تبديل صور الفلل");
+    isVillaSlideshowRunning = false;
+    for (const id in imageIntervals) {
+        if (imageIntervals[id]) clearInterval(imageIntervals[id]);
+        imageIntervals[id] = null;
+    }
+    showToast('تم إيقاف تبديل صور الفلل');
 };
 
-document.getElementById('randomizeImagesBtn').onclick = () => {
-    showToast("🎲 تم تبديل جميع صور الفلل بشكل عشوائي");
+// FIX: Randomize images - actually shuffle the images using Fisher-Yates
+document.getElementById('randomizeImagesBtn').onclick = async () => {
+    properties.forEach(villa => {
+        if (villa.images && villa.images.length > 1) {
+            for (let i = villa.images.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = villa.images[i];
+                villa.images[i] = villa.images[j];
+                villa.images[j] = temp;
+            }
+        }
+    });
+    await saveProperties();
+    showToast('تم تبديل جميع صور الفلل بشكل عشوائي');
 };
 
 document.getElementById('saveSpeedSettingsBtn').onclick = async () => {
@@ -824,13 +813,13 @@ document.getElementById('saveSpeedSettingsBtn').onclick = async () => {
         properties.forEach((v, idx) => { v.slideshowSpeed = idx % 2 === 0 ? 4 : 5.5; });
     } else {
         properties.forEach(v => {
-            const input = document.getElementById(`speed_${v.id}`);
+            const input = document.getElementById('speed_' + v.id);
             if (input) v.slideshowSpeed = parseFloat(input.value);
         });
     }
     renderSpeedsList();
     await saveProperties();
-    showToast('✅ تم حفظ إعدادات سرعة الفلل');
+    showToast('تم حفظ إعدادات سرعة الفلل');
 };
 
 document.getElementById('resetSpeedSettingsBtn').onclick = async () => {
@@ -842,13 +831,13 @@ document.getElementById('resetSpeedSettingsBtn').onclick = async () => {
     renderSpeedsList();
     changeGlobalSpeedMode();
     await saveProperties();
-    showToast('✅ تم استرجاع الإعدادات');
+    showToast('تم استرجاع الإعدادات');
 };
 
 // ==================== Texts ====================
 document.getElementById('saveTextsBtn').onclick = async () => {
     await saveTexts();
-    showToast('✅ تم حفظ النصوص');
+    showToast('تم حفظ النصوص');
 };
 
 document.getElementById('resetTextsBtn').onclick = async () => {
@@ -863,24 +852,24 @@ document.getElementById('resetTextsBtn').onclick = async () => {
     document.getElementById('whatsappBtnText').value = 'استفسار واتساب';
     document.getElementById('locationBtnText').value = 'الموقع';
     await saveTexts();
-    showToast('✅ تم استرجاع النصوص');
+    showToast('تم استرجاع النصوص');
 };
 
 // ==================== Phones ====================
 document.getElementById('addPhoneBtn').onclick = () => {
     const newPhone = document.getElementById('newPhoneNumber').value.trim();
-    if (!newPhone) { showToast('❌ أدخل رقم الهاتف'); return; }
+    if (!newPhone) { showToast('أدخل رقم الهاتف'); return; }
     phoneNumbers.push(newPhone);
     renderPhonesList();
     document.getElementById('newPhoneNumber').value = '';
-    showToast('✅ تم إضافة الرقم');
+    showToast('تم إضافة الرقم');
 };
 
 document.getElementById('savePhonesBtn').onclick = async () => {
     whatsappMain = document.getElementById('whatsappNumber').value;
     await savePhones();
-    document.getElementById('whatsappUrl').value = `https://wa.me/${whatsappMain}`;
-    showToast('✅ تم حفظ الأرقام');
+    document.getElementById('whatsappUrl').value = 'https://wa.me/' + whatsappMain;
+    showToast('تم حفظ الأرقام');
 };
 
 document.getElementById('resetPhonesBtn').onclick = async () => {
@@ -888,8 +877,8 @@ document.getElementById('resetPhonesBtn').onclick = async () => {
     whatsappMain = "9647503124874";
     await savePhones();
     renderPhonesList();
-    document.getElementById('whatsappUrl').value = `https://wa.me/${whatsappMain}`;
-    showToast('✅ تم استرجاع الأرقام');
+    document.getElementById('whatsappUrl').value = 'https://wa.me/' + whatsappMain;
+    showToast('تم استرجاع الأرقام');
 };
 
 // ==================== Social ====================
@@ -897,7 +886,7 @@ document.getElementById('saveSocialBtn').onclick = async () => {
     instagramUrl = document.getElementById('instagramUrl').value;
     facebookUrl = document.getElementById('facebookUrl').value;
     await savePhones();
-    showToast('✅ تم حفظ روابط التواصل');
+    showToast('تم حفظ روابط التواصل');
 };
 
 document.getElementById('resetSocialBtn').onclick = async () => {
@@ -906,7 +895,7 @@ document.getElementById('resetSocialBtn').onclick = async () => {
     instagramUrl = "https://www.instagram.com/";
     facebookUrl = "https://www.facebook.com/";
     await savePhones();
-    showToast('✅ تم استرجاع الروابط');
+    showToast('تم استرجاع الروابط');
 };
 
 // ==================== Appearance ====================
@@ -925,7 +914,7 @@ document.getElementById('saveAppearanceBtn').onclick = () => {
         globalSpeedMode: document.getElementById('globalSpeedMode').value
     };
     localStorage.setItem('adminAppearance', JSON.stringify(settings));
-    showToast('✅ تم حفظ إعدادات المظهر');
+    showToast('تم حفظ إعدادات المظهر');
 };
 
 document.getElementById('resetAppearanceBtn').onclick = () => {
@@ -946,7 +935,7 @@ document.getElementById('resetAppearanceBtn').onclick = () => {
     document.getElementById('heroSpeedVal').innerText = '6';
     changeGlobalSpeedMode();
     document.getElementById('saveAppearanceBtn').click();
-    showToast('✅ تم استرجاع الإعدادات الافتراضية');
+    showToast('تم استرجاع الإعدادات الافتراضية');
 };
 
 // ==================== General Settings ====================
@@ -956,14 +945,14 @@ document.getElementById('saveGeneralSettingsBtn').onclick = () => {
     document.getElementById('heroSlideshowSpeed').value = speed;
     document.getElementById('slideshowMode').value = mode;
     document.getElementById('saveAppearanceBtn').click();
-    showToast('✅ تم حفظ الإعدادات العامة');
+    showToast('تم حفظ الإعدادات العامة');
 };
 
 document.getElementById('resetGeneralSettingsBtn').onclick = () => {
     document.getElementById('generalHeroSpeed').value = '6';
     document.getElementById('generalSlideshowMode').value = 'sequential';
     document.getElementById('saveGeneralSettingsBtn').click();
-    showToast('✅ تم استرجاع الإعدادات');
+    showToast('تم استرجاع الإعدادات');
 };
 
 // ==================== Bookings Clear ====================
@@ -974,17 +963,17 @@ document.getElementById('clearBookingsBtn').onclick = async () => {
         renderVillasList();
         renderBookingsList();
         updateStats();
-        showToast('✅ تم حذف جميع الحجوزات');
+        showToast('تم حذف جميع الحجوزات');
     }
 };
 
 // ==================== Tab Navigation ====================
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        const tabId = btn.getAttribute('data-tab');
+        const tabId = btn.dataset.tab;
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`${tabId}Tab`).classList.add('active');
+        document.getElementById(tabId + 'Tab').classList.add('active');
         btn.classList.add('active');
         if (tabId === 'images') renderHeroImagesList();
         if (tabId === 'bookings') renderBookingsList();
@@ -995,7 +984,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         }
         if (tabId === 'phones') renderPhonesList();
         if (tabId === 'social') {
-            document.getElementById('whatsappUrl').value = `https://wa.me/${whatsappMain}`;
+            document.getElementById('whatsappUrl').value = 'https://wa.me/' + whatsappMain;
         }
     });
 });
@@ -1013,3 +1002,4 @@ loadData();
 </script>
 </body>
 </html>
+
