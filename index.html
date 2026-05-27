@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الكاملة - فلل الفخامة</title>
-    <link ahref="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <title>لوحة التحكم - فلل الفخامة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -39,7 +39,6 @@
         .btn-book { background: #3b82f6; color: white; }
         .btn-cancel { background: #ef4444; color: white; }
         .btn-reset { background: #6b7280; color: white; }
-        .btn-apply { background: #8b5cf6; color: white; }
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 13px; }
@@ -379,8 +378,6 @@ async function loadData() {
         if (!propsSnap.empty) {
             properties = [];
             propsSnap.forEach(doc => properties.push(doc.data()));
-            // ترتيب حسب ID تنازلي (الأحدث أولاً)
-            properties.sort((a, b) => b.id - a.id);
         } else {
             properties = JSON.parse(JSON.stringify(defaultProperties));
             await saveProperties();
@@ -402,73 +399,6 @@ async function loadData() {
         
         renderAll();
     } catch(e) { console.error(e); }
-}
-
-// ==================== Render Functions ====================
-function renderAll() {
-    renderVillasList();
-    renderBookingsList();
-    renderPhonesList();
-    renderHeroImagesList();
-    renderSpeedsList();
-    updateStats();
-    updateVillaImagesInfo();
-    loadSettingsToInputs();
-}
-
-function renderVillasList() {
-    const tbody = document.getElementById('villasList');
-    if (!tbody) return;
-    
-    // ترتيب حسب ID تنازلي (الأحدث أولاً)
-    const sortedProperties = [...properties].sort((a, b) => b.id - a.id);
-    
-    tbody.innerHTML = sortedProperties.map(villa => {
-        const isBooked = bookings.some(b => b.villaId === villa.id);
-        const booking = bookings.find(b => b.villaId === villa.id);
-        return `
-            <tr data-id="${villa.id}">
-                <td style="color:#D4AF37;">${villa.number}ｓｓ
-                <td><input type="text" class="location-input" value="${villa.location || ''}" style="width:180px;">ｓｓ
-                <td><input type="text" class="locname-input" value="${villa.locationName || ''}" style="width:120px;">ｓｓ
-                <td><input type="number" class="price-input" value="${villa.price}" step="1000" style="width:100px;">ｓｓ
-                <td><input type="number" class="beds-input" value="${villa.bedrooms}" style="width:60px;">ｓｓ
-                <td><input type="number" class="baths-input" value="${villa.bathrooms}" style="width:60px;">ｓｓ
-                <td><input type="number" class="guests-input" value="${villa.guests}" style="width:60px;">ｓｓ
-                <td style="color:${isBooked ? '#ef4444' : '#22c55e'};">${isBooked ? 'محجوزة' : 'متاحة'}ｓｓ
-                <td>${isBooked ? `<button class="btn-cancel" data-id="${booking.id}">إلغاء</button>` : `<button class="btn-book" data-id="${villa.id}">حجز</button>`}ｓｓ
-                <td><label class="toggle-switch"><input type="checkbox" class="visible-check" ${villa.visible !== false ? 'checked' : ''}><span class="toggle-slider"></span></label>ｓｓ
-                <td><button class="btn-danger delete-villa" data-id="${villa.id}">🗑️ حذف</button>ｓｓ
-            </tr>
-        `;
-    }).join('');
-    
-    // ربط أزرار الحذف
-    document.querySelectorAll('.delete-villa').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            deleteVillaById(id);
-        };
-    });
-    
-    // ربط أزرار الحجز
-    document.querySelectorAll('.btn-book').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            bookVillaById(id);
-        };
-    });
-    
-    // ربط أزرار إلغاء الحجز
-    document.querySelectorAll('.btn-cancel').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            cancelBookingById(id);
-        };
-    });
 }
 
 // ==================== Delete Villa Function ====================
@@ -513,6 +443,76 @@ async function cancelBookingById(id) {
     renderBookingsList();
     updateStats();
     showToast('✅ تم إلغاء الحجز');
+}
+
+// ==================== Attach Events After Render ====================
+function attachVillaEvents() {
+    // Delete buttons
+    document.querySelectorAll('.delete-villa').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            deleteVillaById(id);
+        };
+    });
+    
+    // Book buttons
+    document.querySelectorAll('.btn-book').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            bookVillaById(id);
+        };
+    });
+    
+    // Cancel buttons
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            cancelBookingById(id);
+        };
+    });
+}
+
+// ==================== Render Functions ====================
+function renderAll() {
+    renderVillasList();
+    renderBookingsList();
+    renderPhonesList();
+    renderHeroImagesList();
+    renderSpeedsList();
+    updateStats();
+    updateVillaImagesInfo();
+    loadSettingsToInputs();
+}
+
+function renderVillasList() {
+    const tbody = document.getElementById('villasList');
+    if (!tbody) return;
+    
+    tbody.innerHTML = properties.map(villa => {
+        const isBooked = bookings.some(b => b.villaId === villa.id);
+        const booking = bookings.find(b => b.villaId === villa.id);
+        return `
+            <tr data-id="${villa.id}">
+                <td style="color:#D4AF37;">${villa.number}</td>
+                <td><input type="text" class="location-input" value="${villa.location || ''}" style="width:180px;"></td>
+                <td><input type="text" class="locname-input" value="${villa.locationName || ''}" style="width:120px;"></td>
+                <td><input type="number" class="price-input" value="${villa.price}" step="1000" style="width:100px;"></td>
+                <td><input type="number" class="beds-input" value="${villa.bedrooms}" style="width:60px;"></td>
+                <td><input type="number" class="baths-input" value="${villa.bathrooms}" style="width:60px;"></td>
+                <td><input type="number" class="guests-input" value="${villa.guests}" style="width:60px;"></td>
+                <td style="color:${isBooked ? '#ef4444' : '#22c55e'};">${isBooked ? 'محجوزة' : 'متاحة'}</td>
+                <td>${isBooked ? `<button class="btn-cancel" data-id="${booking.id}">إلغاء</button>` : `<button class="btn-book" data-id="${villa.id}">حجز</button>`}</td>
+                <td><label class="toggle-switch"><input type="checkbox" class="visible-check" ${villa.visible !== false ? 'checked' : ''}><span class="toggle-slider"></span></label></td>
+                <td><button class="btn-danger delete-villa" data-id="${villa.id}">🗑️ حذف</button></td>
+            </tr>
+        `;
+    }).join('');
+    
+    // ربط الأحداث بعد رسم الجدول مباشرة
+    attachVillaEvents();
 }
 
 function renderBookingsList() {
@@ -705,10 +705,7 @@ document.getElementById('addVillaBtn').onclick = async () => {
     const number = document.getElementById('newNumber').value.trim();
     if (!number) { showToast('❌ أدخل اسم الفيلا'); return; }
     
-    // الحصول على أكبر ID موجود وزيادته بمقدار 1
-    const maxId = properties.length > 0 ? Math.max(...properties.map(p => p.id)) : 0;
-    const newId = maxId + 1;
-    
+    const newId = properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 7;
     const newVilla = {
         id: newId,
         number: number,
@@ -725,8 +722,6 @@ document.getElementById('addVillaBtn').onclick = async () => {
     };
     
     properties.push(newVilla);
-    // ترتيب حسب ID تنازلي (الأحدث أولاً)
-    properties.sort((a, b) => b.id - a.id);
     await saveProperties();
     renderVillasList();
     renderSpeedsList();
@@ -741,7 +736,7 @@ document.getElementById('addVillaBtn').onclick = async () => {
     document.getElementById('imagePreview').innerHTML = '';
     tempImages = [];
     
-    showToast(`✅ تم إضافة ${number} بنجاح (ID: ${newId})`);
+    showToast(`✅ تم إضافة ${number} بنجاح`);
 };
 
 // ==================== Hero Images ====================
