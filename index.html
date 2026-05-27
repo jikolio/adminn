@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - فلل الفخامة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <title>لوحة التحكم الكاملة - فلل الفخامة</title>
+    <link ahref="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -39,6 +39,7 @@
         .btn-book { background: #3b82f6; color: white; }
         .btn-cancel { background: #ef4444; color: white; }
         .btn-reset { background: #6b7280; color: white; }
+        .btn-apply { background: #8b5cf6; color: white; }
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 13px; }
@@ -378,6 +379,8 @@ async function loadData() {
         if (!propsSnap.empty) {
             properties = [];
             propsSnap.forEach(doc => properties.push(doc.data()));
+            // ترتيب حسب ID تنازلي (الأحدث أولاً)
+            properties.sort((a, b) => b.id - a.id);
         } else {
             properties = JSON.parse(JSON.stringify(defaultProperties));
             await saveProperties();
@@ -417,7 +420,10 @@ function renderVillasList() {
     const tbody = document.getElementById('villasList');
     if (!tbody) return;
     
-    tbody.innerHTML = properties.map(villa => {
+    // ترتيب حسب ID تنازلي (الأحدث أولاً)
+    const sortedProperties = [...properties].sort((a, b) => b.id - a.id);
+    
+    tbody.innerHTML = sortedProperties.map(villa => {
         const isBooked = bookings.some(b => b.villaId === villa.id);
         const booking = bookings.find(b => b.villaId === villa.id);
         return `
@@ -436,6 +442,33 @@ function renderVillasList() {
             </tr>
         `;
     }).join('');
+    
+    // ربط أزرار الحذف
+    document.querySelectorAll('.delete-villa').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            deleteVillaById(id);
+        };
+    });
+    
+    // ربط أزرار الحجز
+    document.querySelectorAll('.btn-book').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            bookVillaById(id);
+        };
+    });
+    
+    // ربط أزرار إلغاء الحجز
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.getAttribute('data-id'));
+            cancelBookingById(id);
+        };
+    });
 }
 
 // ==================== Delete Villa Function ====================
@@ -481,43 +514,6 @@ async function cancelBookingById(id) {
     updateStats();
     showToast('✅ تم إلغاء الحجز');
 }
-
-// ==================== Attach Events After Render ====================
-function attachVillaEvents() {
-    // Delete buttons
-    document.querySelectorAll('.delete-villa').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            deleteVillaById(id);
-        };
-    });
-    
-    // Book buttons
-    document.querySelectorAll('.btn-book').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            bookVillaById(id);
-        };
-    });
-    
-    // Cancel buttons
-    document.querySelectorAll('.btn-cancel').forEach(btn => {
-        btn.onclick = (e) => {
-            e.preventDefault();
-            const id = parseInt(btn.getAttribute('data-id'));
-            cancelBookingById(id);
-        };
-    });
-}
-
-// Override renderVillasList to attach events
-const originalRenderVillasList = renderVillasList;
-renderVillasList = function() {
-    originalRenderVillasList();
-    attachVillaEvents();
-};
 
 function renderBookingsList() {
     const container = document.getElementById('bookingsList');
@@ -709,7 +705,10 @@ document.getElementById('addVillaBtn').onclick = async () => {
     const number = document.getElementById('newNumber').value.trim();
     if (!number) { showToast('❌ أدخل اسم الفيلا'); return; }
     
-    const newId = properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 7;
+    // الحصول على أكبر ID موجود وزيادته بمقدار 1
+    const maxId = properties.length > 0 ? Math.max(...properties.map(p => p.id)) : 0;
+    const newId = maxId + 1;
+    
     const newVilla = {
         id: newId,
         number: number,
@@ -726,6 +725,8 @@ document.getElementById('addVillaBtn').onclick = async () => {
     };
     
     properties.push(newVilla);
+    // ترتيب حسب ID تنازلي (الأحدث أولاً)
+    properties.sort((a, b) => b.id - a.id);
     await saveProperties();
     renderVillasList();
     renderSpeedsList();
@@ -740,7 +741,7 @@ document.getElementById('addVillaBtn').onclick = async () => {
     document.getElementById('imagePreview').innerHTML = '';
     tempImages = [];
     
-    showToast(`✅ تم إضافة ${number} بنجاح`);
+    showToast(`✅ تم إضافة ${number} بنجاح (ID: ${newId})`);
 };
 
 // ==================== Hero Images ====================
